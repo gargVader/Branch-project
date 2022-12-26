@@ -22,12 +22,12 @@ class LoginViewModel @Inject constructor(
         email: String = state.email,
         password: String = state.password,
         onLoginSuccess: () -> Unit,
-        onError : () -> Unit
+        onError : (message : String?) -> Unit
     ) {
         viewModelScope.launch {
             repository.login(
-                email = state.email,
-                password = state.password
+                email = email,
+                password = password
             ).collect { result ->
                 when (result) {
                     is Resource.Success -> {
@@ -41,7 +41,7 @@ class LoginViewModel @Inject constructor(
                     }
 
                     is Resource.Error -> {
-                        onError()
+                        onError(result.message)
                     }
                 }
             }

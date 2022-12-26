@@ -32,6 +32,7 @@ class BranchRepositoryImpl @Inject constructor(
                 } catch (e: Exception) {
                     e.printStackTrace()
                     emit(Resource.Error("Error"))
+                    emit(Resource.Loading(isLoading = false))
                     null
                 }
 
@@ -46,16 +47,13 @@ class BranchRepositoryImpl @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getAllMessages(authToken: String): Flow<Resource<Map<Int, List<Message>>>> {
         return flow {
-            if (messageMap!=null){
-                emit(Resource.Success(data = messageMap))
-                return@flow
-            }
             emit(Resource.Loading(isLoading = true))
             var response = try {
                 api.getAllMessages(authToken = authToken)
             } catch (e: Exception) {
                 e.printStackTrace()
                 emit(Resource.Error("Error"))
+                emit(Resource.Loading(isLoading = false))
                 null
             }
 
@@ -87,6 +85,7 @@ class BranchRepositoryImpl @Inject constructor(
             } catch (e: Exception) {
                 e.printStackTrace()
                 emit(Resource.Error("Error"))
+                emit(Resource.Loading(isLoading = false))
                 null
             }
 
