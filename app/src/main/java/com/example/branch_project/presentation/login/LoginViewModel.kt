@@ -18,40 +18,33 @@ class LoginViewModel @Inject constructor(
 
     var state by mutableStateOf(LoginState())
 
-    fun onEvent(event: LoginEvent) {
-        when (event) {
-            is LoginEvent.OnLoginClick -> {
-                login()
-            }
-        }
-    }
-
-    private fun login(
+    fun login(
         email: String = state.email,
-        password: String = state.password
+        password: String = state.password,
+        onLoginSuccess: () -> Unit,
+        onError : () -> Unit
     ) {
         viewModelScope.launch {
             repository.login(
                 email = state.email,
                 password = state.password
             ).collect { result ->
-                when(result){
+                when (result) {
                     is Resource.Success -> {
-                        if (result.data!=null){
-                            // login success
+                        if (result.data != null) {
+                            onLoginSuccess()
                         }
                     }
 
                     is Resource.Loading -> {
-                        state = state.copy(isLoggingIn = true)
+                        state = state.copy(isLoggingIn = result.isLoading)
                     }
 
                     is Resource.Error -> {
-
+                        onError()
                     }
                 }
             }
         }
     }
-
 }

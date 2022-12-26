@@ -11,11 +11,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import javax.inject.Singleton
 
 // Used to store auth token of logged in customer service agent
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "my_data_store")
 
+@Singleton
 class AgentPreferences @Inject constructor(val app: Application) {
 
     suspend fun getAuthToken(): String? {
