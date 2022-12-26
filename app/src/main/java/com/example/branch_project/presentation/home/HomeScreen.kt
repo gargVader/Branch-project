@@ -15,9 +15,11 @@ fun HomeScreen(
 
     val state = viewModel.state
 
-    Button(onClick = { navController.navigate(Screen.ChatScreen.route + "/" + "1") }) {
-        Text(text = "Click")
-    }
+
+
+//    Button(onClick = { navController.navigate(Screen.ChatScreen.route + "/" + "1") }) {
+//        Text(text = "Click")
+//    }
 
 
 }

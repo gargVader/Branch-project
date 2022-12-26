@@ -1,6 +1,5 @@
 package com.example.branch_project.presentation.home
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -22,11 +21,10 @@ class HomeViewModel @Inject constructor(
     var state by mutableStateOf(HomeState())
 
     init {
-        Log.d("Girish", "fetchAllMessages being called")
         fetchAllMessages()
     }
 
-    private fun fetchAllMessages() {
+    fun fetchAllMessages() {
         viewModelScope.launch {
             val authToken = agentPreferences.getAuthToken()
             if (authToken != null) {

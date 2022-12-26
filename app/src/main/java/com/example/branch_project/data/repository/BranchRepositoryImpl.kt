@@ -1,5 +1,9 @@
 package com.example.branch_project.data.repository
 
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
+import com.example.branch_project.data.mapper.toMessage
 import com.example.branch_project.data.remote.BranchApi
 import com.example.branch_project.data.remote.LoginRequest
 import com.example.branch_project.data.remote.MessageRequest
@@ -17,6 +21,8 @@ class BranchRepositoryImpl @Inject constructor(
     private val api: BranchApi,
     private val agentPreferences: AgentPreferences,
 ) : BranchRepository {
+
+    override var messageList: Map<Int, List<Message>>? = null
 
     override suspend fun login(email: String, password: String): Flow<Resource<String>> {
         return flow {
@@ -38,10 +44,11 @@ class BranchRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getAllMessages(authToken: String): Flow<Resource<List<Message>>> {
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun getAllMessages(authToken: String): Flow<Resource<Map<Int, List<Message>>>> {
         return flow {
             emit(Resource.Loading(isLoading = true))
-            val response = try {
+            var response = try {
                 api.getAllMessages(authToken = authToken)
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -50,12 +57,18 @@ class BranchRepositoryImpl @Inject constructor(
             }
 
             response?.let {
-                emit(Resource.Success(data = response))
+                messageList = response.map {
+                    it.toMessage()
+                }.groupBy {
+                    it.threadId
+                }
+                emit(Resource.Success(data = messageList))
                 emit(Resource.Loading(isLoading = false))
             }
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun sendMessage(
         authToken: String,
         threadId: Int,
@@ -75,7 +88,7 @@ class BranchRepositoryImpl @Inject constructor(
             }
 
             response?.let {
-                emit(Resource.Success(data = response))
+                emit(Resource.Success(data = response.toMessage()))
                 emit(Resource.Loading(isLoading = false))
             }
         }

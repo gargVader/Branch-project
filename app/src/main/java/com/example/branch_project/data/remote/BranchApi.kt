@@ -16,13 +16,13 @@ interface BranchApi {
     @GET("api/messages")
     suspend fun getAllMessages(
         @Header("X-Branch-Auth-Token") authToken: String,
-    ): List<Message>
+    ): List<MessageDto>
 
     @POST("api/messages")
     suspend fun sendMessage(
         @Header("X-Branch-Auth-Token") authToken: String,
         @Body messageRequest: MessageRequest
-    ): Message
+    ): MessageDto
 
     @POST("api/reset")
     suspend fun reset(

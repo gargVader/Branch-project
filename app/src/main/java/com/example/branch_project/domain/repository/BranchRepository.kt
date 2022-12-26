@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface BranchRepository {
 
+    var messageList: Map<Int, List<Message>>?
+
     suspend fun login(
         email: String,
         password: String
@@ -13,7 +15,7 @@ interface BranchRepository {
 
     suspend fun getAllMessages(
         authToken: String
-    ): Flow<Resource<List<Message>>>
+    ): Flow<Resource<Map<Int, List<Message>>>>
 
     suspend fun sendMessage(
         authToken: String,
