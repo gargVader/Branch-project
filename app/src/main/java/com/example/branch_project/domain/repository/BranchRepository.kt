@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface BranchRepository {
 
-    var messageList: Map<Int, List<Message>>?
+    var messageMap: Map<Int, List<Message>>?
 
     suspend fun login(
         email: String,

@@ -1,7 +1,6 @@
 package com.example.branch_project.data.repository
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.branch_project.data.mapper.toMessage
 import com.example.branch_project.data.remote.BranchApi
@@ -22,7 +21,7 @@ class BranchRepositoryImpl @Inject constructor(
     private val agentPreferences: AgentPreferences,
 ) : BranchRepository {
 
-    override var messageList: Map<Int, List<Message>>? = null
+    override var messageMap: Map<Int, List<Message>>? = null
 
     override suspend fun login(email: String, password: String): Flow<Resource<String>> {
         return flow {
@@ -47,6 +46,10 @@ class BranchRepositoryImpl @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getAllMessages(authToken: String): Flow<Resource<Map<Int, List<Message>>>> {
         return flow {
+            if (messageMap!=null){
+                emit(Resource.Success(data = messageMap))
+                return@flow
+            }
             emit(Resource.Loading(isLoading = true))
             var response = try {
                 api.getAllMessages(authToken = authToken)
@@ -57,12 +60,12 @@ class BranchRepositoryImpl @Inject constructor(
             }
 
             response?.let {
-                messageList = response.map {
+                messageMap = response.map {
                     it.toMessage()
                 }.groupBy {
                     it.threadId
                 }
-                emit(Resource.Success(data = messageList))
+                emit(Resource.Success(data = messageMap))
                 emit(Resource.Loading(isLoading = false))
             }
         }

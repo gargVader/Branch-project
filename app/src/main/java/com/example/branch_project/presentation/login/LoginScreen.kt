@@ -18,6 +18,7 @@ fun LoginScreen(
     navController: NavHostController
 ) {
 
+    val state = viewModel.state
     Column(
         modifier = Modifier.padding(8.dp)
     ) {
@@ -25,7 +26,7 @@ fun LoginScreen(
             value = viewModel.state.email,
             label = { Text(text = "Email") },
             onValueChange = {
-                viewModel.state.email = it
+                viewModel.state = state.copy(email = it)
             })
 
         Spacer(
@@ -38,7 +39,7 @@ fun LoginScreen(
             value = viewModel.state.password,
             label = { Text(text = "Password") },
             onValueChange = {
-                viewModel.state.password = it
+                viewModel.state = state.copy(password = it)
             })
 
         Spacer(

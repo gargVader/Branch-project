@@ -8,7 +8,7 @@ data class MessageDto(
     @field:Json(name = "thread_id")
     val threadId: Int,
     @field:Json(name = "user_id")
-    val userId: String,
+    val userId: String?,
     @field:Json(name = "agent_id")
     val agentId: String?,
     @field:Json(name = "body")

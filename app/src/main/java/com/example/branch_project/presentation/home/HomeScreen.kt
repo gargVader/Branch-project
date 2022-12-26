@@ -29,14 +29,16 @@ fun HomeScreen(
             val message = item.second.sortedBy {
                 it.timestamp
             }.last()
-            ThreadItem(
-                body = message.body,
-                timestamp = message.timestamp,
-                id = message.userId,
-                modifier = Modifier.clickable(enabled = true){
-                    navController.navigate(Screen.ChatScreen.route + "/" + "$threadId")
-                }
-            )
+            (message.agentId ?: message.userId)?.let {
+                ThreadItem(
+                    body = message.body,
+                    timestamp = message.timestamp,
+                    id = it,
+                    modifier = Modifier.clickable(enabled = true) {
+                        navController.navigate(Screen.ChatScreen.route + "/" + "$threadId")
+                    }
+                )
+            }
 
 
 //            item.second.
