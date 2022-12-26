@@ -32,7 +32,7 @@ class HomeViewModel @Inject constructor(
                     when (result) {
                         is Resource.Success -> {
                             if (result.data != null) {
-                                state = state.copy(messageList = result.data)
+                                state = state.copy(messageMap = result.data)
                             }
                         }
 
